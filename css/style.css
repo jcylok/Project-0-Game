@@ -1,6 +1,6 @@
 #myCanvas {
     background: url('/images/space.jpg') center;
-    animation: 8000s scroll infinite linear reverse;
+    animation: 5000s scroll infinite linear reverse;
     background-size: cover;
     margin: 0 auto;
     display: block;

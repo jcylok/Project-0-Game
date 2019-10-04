@@ -42,20 +42,19 @@ let bulletWidth = 10
 let bulletLength = 30
 
 
-var jumping = false;
 
 function onkeydown(e) {
-    if(e.keyCode == 39) { //right
+    if(e.keyCode === 39) { //right
         if (px + playerWidth > cvsWidth) {
             px = px;
         } else {
-            px+=20;
+            px+=50;
         }
     } else if (e.keyCode === 37) { //left
         if (px - 10 < 0) {
             px = px;
         } else {
-            px-=20;
+            px-=50;
         }       
     } else if (e.keyCode === 38) { //up
         if (py - 10 === 0) {
@@ -70,11 +69,22 @@ function onkeydown(e) {
             console.log(py)
         } else {
             py+=20;
+            console.log(py)
         }
 
+    } else if (e.keyCode === 32) {
+        bullet.push({
+            x: px,
+            y: py - 20
+        })
     }
 }
+
+
+
 document.addEventListener("keydown", onkeydown);
+// document.addEventListener("keydown", attack);
+
 
 
 
@@ -104,15 +114,15 @@ obs[0] = {
 }
 
 
-bullet[0] = {
-    x: px + 30,
-    y: py
-}
+// bullet[0] = {
+//     x: px ,
+//     y: py
+// }
 
-bullet[1] = {
-    x: px + 30,
-    y: py + 50
-}
+// bullet[1] = {
+//     x: px,
+//     y: py + 50
+// }
 
 let score = 0;
 
@@ -131,14 +141,6 @@ const drawPlayer = () => {
     ctx.closePath();
   }
 
-  const drawBullet = () => {
-    ctx.beginPath();
-    let bullet = new Image();
-    bullet.src = "/images/spaceship2.png";
-    ctx.drawImage(bullet, px, py -60, 50, 100);
-    // py+= 0.5
-    ctx.closePath();
-  }
 
 
 
@@ -154,7 +156,7 @@ function draw() {
         ctx.drawImage(coinsIm, c.x, c.y, coinWidth, coinHeight);
         ctx.closePath();
         c.y ++
-        if(c.y === 200) {
+        if(c.y === 400) {
             coins.push( {
                 x: Math.floor(Math.random() * cvsWidth) - 10,
                 y: 0
@@ -163,6 +165,9 @@ function draw() {
         if ((px + playerWidth >= coins[i].x) && (px + playerWidth <= coins[i].x + coinWidth) && (py + playerHeight >= coins[i].y) && (py + playerHeight <= coins[i].y + coinHeight)) {
             score ++;
             coins[i] = '';
+        }
+        if(coins[i].y > cvsHeight) {
+            coins.splice(i, 1)
         }
     }
 
@@ -175,37 +180,49 @@ function draw() {
         ctx.drawImage(obsIm, o.x, o.y, 70, 70);
         ctx.closePath();
         o.y ++
-        if(o.y === 200) {
+        // if(o.y === 400) {
+        //     obs.push( {
+        //         x: Math.floor(Math.random() * cvsWidth) - 10,
+        //         y: 0
+        //     })
+        // }
+
+        var interval = setInterval(function() {
             obs.push( {
                 x: Math.floor(Math.random() * cvsWidth) - 10,
                 y: 0
             })
+        }, 200000);
+
+        clearInterval(interval)
+        if(obs[i].y > cvsHeight) {
+            obs.splice(i, 1)
         }
     }
 
 
-     
-    
-
     for(let i=0; i<bullet.length; i++) {
-        // var b = bullet[i];
         ctx.beginPath();
         let bulletIm = new Image();
         bulletIm.src = "/images/bullet.png";
         ctx.drawImage(bulletIm, bullet[i].x, bullet[i].y, bulletWidth, bulletLength);
         ctx.closePath();
         bullet[i].y -=5
-        if(bullet[i].y === py - 100) {
-            bullet.push( {
-                x: px + 45,
-                y: py
-            })
-        }
+ 
         if(bullet[i].y < 0) {
-            bullet.shift()
+            bullet.splice(i, 1)
         }
-        console.log(bullet[i])
     }
+
+    for (let i=0; i<bullet.length; i++) {
+        for (let j=0; j<obs.length;j++ ) {
+            if ((bullet[i].x + bulletWidth >= obs[j].x) && (bullet[i].x + bulletWidth <= obs[j].x + obsWidth) && (bullet[i].y + bulletLength >= obs[j].y) && (bullet[i].y + bulletLength <= obs[j].y + obsHeight)) {
+                score ++;
+                obs[j] = '';
+        }
+    }
+}
+
     
  
     ctx.fillStyle = "#C0C0C0";
@@ -214,13 +231,17 @@ function draw() {
 
 
     drawPlayer()
+    // attack();
+    // for (i=0; i<bullet.length; i++) {
+    //     bullet[i].y -=1
+    // }
 
     
 }
 setInterval(() => {
     requestAnimationFrame(draw)
     
-}, 1);
+}, 0.0000000001);
 
 // draw()
 // 
