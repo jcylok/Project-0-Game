@@ -1,0 +1,15 @@
+#myCanvas {
+    background: url('/images/space.jpg') center;
+    animation: 8000s scroll infinite linear reverse;
+    background-size: cover;
+    margin: 0 auto;
+    display: block;
+
+}
+
+
+@keyframes scroll{
+    100% {
+        background-position: 0px -100000px;
+    }
+}
