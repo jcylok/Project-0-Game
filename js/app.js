@@ -6,6 +6,7 @@ console.log("123");
 $("#StartButton").click(function () {
     $("#SplashScreen").hide();
     $("#myCanvas").show();
+    $("#myCanvas").attr("display", "block");
 });
 
 let cvs = document.getElementById("myCanvas");
@@ -39,12 +40,16 @@ let cvsWidth = cvs.width;
 let cvsHeight = cvs.height;
 let playerWidth = 100;
 let playerHeight = 100;
-let obsWidth = 20;
-let obsHeight = 4;
-let coinWidth = 60;
-let coinHeight = 60;
+let obsWidth = 120;
+let obsHeight = 60;
+let satelliteWidth = 80;
+let satelliteHeight = 70;
+let satellite2Width = 80;
+let satellite2Height = 70;
 let bulletWidth = 30
 let bulletLength = 50
+let explosionWidth = 60;
+let explosionHeight = 60;
 
 
 
@@ -96,11 +101,15 @@ document.addEventListener("keydown", onkeydown);
 
 let px = 300
 let py = 500
+let lives = 3;
+let score = 0;
 let obs = [];
 let bullet = [];
 let back = [];
-let coins = [];
+let satellite = [];
+let satellite2 = [];
 let hit = [];
+let explosion = [];
 
 
 
@@ -109,9 +118,13 @@ back[0] = {
     y: 0
 }
 
-coins[0] = {
-    x: 100,
-    y: 0
+satellite[0] = {
+    x: 0,
+    y: 200
+}
+satellite2[0] = {
+    x: cvsWidth,
+    y: 500
 }
 
 obs[0] = {
@@ -120,17 +133,7 @@ obs[0] = {
 }
 
 
-// bullet[0] = {
-//     x: px ,
-//     y: py
-// }
 
-// bullet[1] = {
-//     x: px,
-//     y: py + 50
-// }
-
-let score = 0;
 
 
 let x = 100
@@ -141,7 +144,7 @@ let y =200
 const drawPlayer = () => {
     ctx.beginPath();
     let player = new Image();
-    player.src = "/images/spaceship.png";
+    player.src = "/images/spaceship2.png";
     ctx.drawImage(player, px, py, playerWidth, playerHeight);
     // py+= 0.5
     ctx.closePath();
@@ -154,26 +157,41 @@ const drawPlayer = () => {
 function draw() {
     ctx.clearRect(0, 0, cvsWidth, cvsHeight);
 
-    for(let i=0; i<coins.length; i++) {
-        var c = coins[i];
+    for(let i=0; i<satellite.length; i++) {
         ctx.beginPath();
-        let coinsIm = new Image();
-        coinsIm.src = "/images/astronaut.png";
-        ctx.drawImage(coinsIm, c.x, c.y, coinWidth, coinHeight);
+        let satelliteIm = new Image();
+        satelliteIm.src = "/images/satellite2.png";
+        ctx.drawImage(satelliteIm, satellite[i].x, satellite[i].y, satelliteWidth, satelliteHeight);
         ctx.closePath();
-        c.y ++
-        if(c.y === 400) {
-            coins.push( {
-                x: Math.floor(Math.random() * cvsWidth) - 10,
-                y: 0
+        satellite[i].x += 0.1
+        // console.log(satellite[i].x)
+        if(satellite[i].x === 485.599999999981 ) {
+            satellite.push( {
+                x: 0,
+                y: Math.floor(Math.random() * cvsHeight) - 10
             })
         }
-        if ((px + playerWidth >= coins[i].x) && (px + playerWidth <= coins[i].x + coinWidth) && (py + playerHeight >= coins[i].y) && (py + playerHeight <= coins[i].y + coinHeight)) {
-            score ++;
-            coins[i] = '';
+        if(satellite[i].x > cvsWidth) {
+            satellite.splice(i, 1)
         }
-        if(coins[i].y > cvsHeight) {
-            coins.splice(i, 1)
+    }
+
+    for(let i=0; i<satellite2.length; i++) {
+        ctx.beginPath();
+        let satellite2Im = new Image();
+        satellite2Im.src = "/images/satellite.png";
+        ctx.drawImage(satellite2Im, satellite2[i].x, satellite2[i].y, satellite2Width, satellite2Height);
+        ctx.closePath();
+        satellite2[i].x -= 0.1
+        // console.log(satellite2[i].x)
+        if(satellite2[i].x === 485.599999999981 ) {
+            satellite2.push( {
+                x: 0,
+                y: Math.floor(Math.random() * cvsHeight) - 10
+            })
+        }
+        if(satellite2[i].x < 0) {
+            satellite2.splice(i, 1)
         }
     }
 
@@ -181,19 +199,60 @@ function draw() {
     for(let i=0; i<obs.length; i++) {
         ctx.beginPath();
         let obsIm = new Image();
-        obsIm.src = "/images/monster.png";
-        ctx.drawImage(obsIm, obs[i].x, obs[i].y, 70, 70);
+        obsIm.src = "/images/monster2.png";
+        ctx.drawImage(obsIm, obs[i].x, obs[i].y, obsWidth, obsHeight);
         ctx.closePath();
-        obs[i].y ++
-        if(obs[i].y === py) {
-            obs.push( {
-                x: Math.floor(Math.random() * cvsWidth) - 10,
-                y: 0
-            })
+
+        if (i % 2 === 0) {
+            obs[i].y ++;
+        } else {
+            obs[i].y += 2;
+        }
+        
+        if( obs[i].y === cvsHeight || obs[i].y === py) {
+            if (obs.length + hit.length + explosion.length <= 6) {
+                obs.push( {
+                    x: Math.floor(Math.random() * cvsWidth) - 10,
+                    y: 0
+                })
+            }
         }
 
         if(obs[i].y > cvsHeight) {
             obs.splice(i, 1)
+        }
+        // check collision
+        if ((px + playerWidth >= obs[i].x - 5) && (px + playerWidth <= obs[i].x + obsWidth + 5) && (py + playerHeight >= obs[i].y - 5) && (py + playerHeight <= obs[i].y + obsHeight + 5)) {
+            lives --;
+            console.log(lives);
+            explosion.push({
+                x: obs[i].x,
+                y: obs[i].y
+            })
+            obs.splice(i,1);
+        }
+    }
+    
+    // create explosion
+    for(let i=0; i<explosion.length; i++) {
+        ctx.beginPath();
+        let explosionIm = new Image();
+        explosionIm.src = "images/explosion.png";
+        ctx.drawImage(explosionIm, explosion[i].x, explosion[i].y, explosionWidth, explosionHeight);
+        ctx.closePath();
+        explosion[i].y += 0.6
+        if(explosion[i].y === cvsHeight || explosion[i].y === py || explosion[i].y === py + 1) {
+            if (obs.length + hit.length + explosion.length <= 6) {
+                obs.push( {
+                    x: Math.floor(Math.random() * cvsWidth) - 10,
+                    y: 0
+                })
+                console.log(obs.length + hit.length)
+            }
+        }
+
+        if(explosion[i].y > cvsHeight) {
+            explosion.splice(i, 1)
         }
 
     }
@@ -201,15 +260,18 @@ function draw() {
     for(let i=0; i<hit.length; i++) {
         ctx.beginPath();
         let hitIm = new Image();
-        hitIm.src = "/images/spaceship2.png";
-        ctx.drawImage(hitIm, hit[i].x, hit[i].y, 70, 70);
+        hitIm.src = "/images/coin.png";
+        ctx.drawImage(hitIm, hit[i].x, hit[i].y, 30, 30);
         ctx.closePath();
-        hit[i].y ++
-        if(hit[i].y === py) {
-            obs.push( {
-                x: Math.floor(Math.random() * cvsWidth) - 10,
-                y: 0
-            })
+        hit[i].y += 3
+        if(hit[i].y === cvsHeight || hit[i].y === py || hit[i].y === py + 1) {
+            if (obs.length + hit.length + explosion.length <= 6) {
+                obs.push( {
+                    x: Math.floor(Math.random() * cvsWidth) - 10,
+                    y: 0
+                })
+                console.log(obs.length + hit.length)
+            }
         }
 
         if(hit[i].y > cvsHeight) {
@@ -220,13 +282,14 @@ function draw() {
 
 
 
+
     for(let i=0; i<bullet.length; i++) {
         ctx.beginPath();
         let bulletIm = new Image();
         bulletIm.src = "/images/bullet.png";
         ctx.drawImage(bulletIm, bullet[i].x, bullet[i].y, bulletWidth, bulletLength);
         ctx.closePath();
-        bullet[i].y -=5
+        bullet[i].y -=10
  
         if(bullet[i].y < 0) {
             bullet.splice(i, 1)
@@ -244,8 +307,12 @@ function draw() {
                 obs.splice(j,1) 
             }
         }
+
     }
 
+    ctx.fillStyle = "#C0C0C0";
+    ctx.font = "30px Arial";
+    ctx.fillText(`Lives: ${lives}`, 10, cvsHeight - 60);
     
  
     ctx.fillStyle = "#C0C0C0";
@@ -255,10 +322,7 @@ function draw() {
 
     drawPlayer()
 
-    // attack();
-    // for (i=0; i<bullet.length; i++) {
-    //     bullet[i].y -=1
-    // }
+
 
     
 }

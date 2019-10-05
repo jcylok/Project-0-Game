@@ -1,5 +1,6 @@
 body {
-    background-image: url('/images/mainbg.jpg');
+    background-image: url('/images/bg.webp');
+    background-size: cover;
 }
 
 #myCanvas {
