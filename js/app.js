@@ -1,18 +1,29 @@
 // $('#playgame').on('click', function() {
 //     $('body').prepend(`<canvas id="myCanvas" width=980 height=780></canvas>`);
 // });
+var themeAudio = document.getElementById("theme");
+themeAudio.volume = 0.7;
 var shootAudio = document.getElementById("shoot");
+shootAudio.volume = 0.3;
 var coinAudio = document.getElementById("coin");
+coinAudio.volume = 1;
+
+var explosionAudio = document.getElementById("explosion");
+explosionAudio.volume = 0.3;
 
 
-$("#StartButton").click(function () {
-    $("#SplashScreen").hide();
-    $("#myCanvas").show();
-    $("#myCanvas").attr("display", "block");
-});
+
+
+// $("#StartButton").click(function () {
+//     $("#SplashScreen").hide();
+//     $("#myCanvas").show();
+//     $("#myCanvas").attr("display", "block");
+// });
 
 let cvs = document.getElementById("myCanvas");
 let ctx = cvs.getContext("2d");
+
+
 
 console.log(ctx);
 
@@ -34,10 +45,10 @@ let coin = "/images/coin.png"
 
 let cvsWidth = cvs.width;
 let cvsHeight = cvs.height;
-let playerWidth = 100;
-let playerHeight = 100;
-let obsWidth = 120;
-let obsHeight = 60;
+let playerWidth = 80;
+let playerHeight = 80;
+let obsWidth = 80;
+let obsHeight = 80;
 let satelliteWidth = 80;
 let satelliteHeight = 70;
 let satellite2Width = 80;
@@ -79,11 +90,15 @@ function onkeydown(e) {
         }
 
     } else if (e.keyCode === 32) {
-        bullet.push({
-            x: px,
-            y: py - 20
-        })
-        shootAudio.play();
+        if (bullet.length < 10) {
+            bullet.push({
+                x: px,
+                y: py - 20
+            })
+            shootAudio.play();
+            
+        }
+
     }
 }
 
@@ -113,11 +128,11 @@ back[0] = {
 
 satellite[0] = {
     x: 0,
-    y: 200
+    y: Math.floor(Math.random() * cvsHeight) - 10
 }
 satellite2[0] = {
     x: cvsWidth,
-    y: 500
+    y: Math.floor(Math.random() * cvsHeight) - 10
 }
 
 obs[0] = {
@@ -151,9 +166,11 @@ let y =200
 const drawPlayer = () => {
     ctx.beginPath();
     let player = new Image();
-    player.src = "/images/spaceship2.png";
+    player.src = "/images/rocket.png";
     ctx.drawImage(player, px, py, playerWidth, playerHeight);
-    // py+= 0.5
+    if (py <= cvsHeight - playerHeight) {
+        py+= 2;
+    } 
     ctx.closePath();
   }
 
@@ -162,6 +179,9 @@ const drawPlayer = () => {
 
 
 function draw() {
+    themeAudio.play();
+
+    
     ctx.clearRect(0, 0, cvsWidth, cvsHeight);
 
     for(let i=0; i<satellite.length; i++) {
@@ -171,7 +191,7 @@ function draw() {
         ctx.drawImage(satelliteIm, satellite[i].x, satellite[i].y, satelliteWidth, satelliteHeight);
         ctx.closePath();
         satellite[i].x += 0.1
-        if(satellite[i].x === 485.599999999981 ) {
+        if(satellite[i].x === 688.700000000088) {
             satellite.push( {
                 x: 0,
                 y: Math.floor(Math.random() * cvsHeight) - 10
@@ -189,6 +209,7 @@ function draw() {
         ctx.drawImage(satellite2Im, satellite2[i].x, satellite2[i].y, satellite2Width, satellite2Height);
         ctx.closePath();
         satellite2[i].x -= 0.1
+        console.log(satellite2[i].x)
         if(satellite2[i].x === 485.599999999981 ) {
             satellite2.push( {
                 x: 0,
@@ -204,30 +225,35 @@ function draw() {
     for(let i=0; i<obs.length; i++) {
         ctx.beginPath();
         let obsIm = new Image();
-        obsIm.src = "/images/monster2.png";
+        obsIm.src = "/images/enemy.png";
+   
+
+        
+        // obsIm.src = "/images/monster2.png";
         ctx.drawImage(obsIm, obs[i].x, obs[i].y, obsWidth, obsHeight);
         ctx.closePath();
 
         if (i % 2 === 0) {
-            obs[i].y ++;
+            obs[i].y += 4;
         } else {
-            obs[i].y += 2;
+            obs[i].y += 6;
         }
-        
-        // if( obs[i].y === cvsHeight || obs[i].y === py) {
-            if (obs.length + hit.length + explosion.length <= 5 || obs.length + hit.length + explosion.length + collected.length < 1) {
+
+        if( obs.length < 5) {
+            // if (obs.length + hit.length + explosion.length + collected.length <= 5) {
                 obs.push( {
                     x: Math.floor(Math.random() * cvsWidth) - 10,
                     y: 0
                 })
-            }
-        // }
+            // }
+        }
         if(obs[i].y > cvsHeight) {
             obs.splice(i, 1);
         }
         // check collision
-        if ((px + playerWidth >= obs[i].x - 5) && (px + playerWidth <= obs[i].x + obsWidth + 5) && (py + playerHeight >= obs[i].y - 5) && (py + playerHeight <= obs[i].y + obsHeight + 5)) {
+        if ((px + playerWidth/2 >= obs[i].x - 10) && (px + playerWidth/2 <= obs[i].x + obsWidth + 10) && (py + playerHeight/2 >= obs[i].y - 5) && (py + playerHeight/2 <= obs[i].y + obsHeight + 5)) {
             lives --;
+            explosionAudio.play();
             console.log(lives);
             let explosionX = obs[i].x;
             let explosionY = obs[i].y;
@@ -248,12 +274,12 @@ function draw() {
         ctx.closePath();
         explosion[i].y += 0.6
         if(explosion[i].y === cvsHeight || explosion[i].y === py || explosion[i].y === py + 1) {
-            if (obs.length + hit.length + explosion.length <= 8) {
+            // if (obs.length + hit.length + explosion.length + collected.length <= 5) {
                 obs.push( {
                     x: Math.floor(Math.random() * cvsWidth) - 10,
                     y: 0
                 })
-            }
+            // }
         }
 
         if(explosion[i].y > cvsHeight) {
@@ -271,7 +297,7 @@ function draw() {
         hitIm.src = "/images/coin.png";
         ctx.drawImage(hitIm, hit[i].x, hit[i].y, 30, 30);
         ctx.closePath();
-        hit[i].y += 3
+        hit[i].y += 12;
         if(hit[i].y === cvsHeight || hit[i].y === py || hit[i].y === py + 1) {
             if (obs.length + hit.length + explosion.length <= 8) {
                 obs.push( {
@@ -287,7 +313,7 @@ function draw() {
 
         // make coin disappear when player collected
         if ((px + playerWidth/2 >= hitX - 10) && (px + playerWidth/2 <= hitX + coinWidth + 10) && (py + playerHeight/2 >= hitY - 10) && (py + playerHeight/2 <= hitY + coinHeight + 10) && hitY > 0) {
-            score ++;
+            score ++;   
             coinAudio.play();
             disappearX = hit[i].x;
             disappearY = hit[i].y;
@@ -305,9 +331,6 @@ function draw() {
     }
     }
 
-
-    
-
     for(let i=0; i<collected.length; i++) {
         ctx.beginPath();
         let collectedIm = new Image();
@@ -320,9 +343,9 @@ function draw() {
             collected.splice(i, 1);
         }
     }
-    if (bullet.length < 100) {
+
     for(let i=0; i<bullet.length; i++) {
-        ctx.beginPath();
+        ctx.beginPath();         
         let bulletIm = new Image();
         bulletIm.src = "/images/bullet.png";
         ctx.drawImage(bulletIm, bullet[i].x + playerWidth/2.5, bullet[i].y, bulletWidth, bulletHeight);
@@ -333,7 +356,7 @@ function draw() {
             bullet.splice(i, 1);
         }
     }
-}
+
     
     for (let i=0; i<bullet.length; i++) {
         let buX = bullet[i].x;
@@ -370,12 +393,16 @@ function draw() {
     if (lives === 0) {
         // alert("game over")
     }
+
+  requestAnimationFrame(draw)
+        
     
 }
-setInterval(() => {
-    requestAnimationFrame(draw)
+// setInterval(() => {
+//     requestAnimationFrame(draw)
     
-}, 0.00001);
+// }, 0.00001);
+setTimeout(draw, 100)
 
 // draw()
 // 

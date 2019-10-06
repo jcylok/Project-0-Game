@@ -8,8 +8,8 @@ body {
     animation: 5000s scroll infinite linear reverse;
     background-size: cover;
     margin: 0 auto;
-    display: none;
-    position: absolute
+    display: block;
+    /* position: absolute; */
 
 }
 
