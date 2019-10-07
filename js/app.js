@@ -32,7 +32,7 @@ $('#restart').on('click',function() {
 let previous=0;
 let previous1=0;
 
-$('.shipOption').click(function(){
+$('.shipOption').click(function(){   // Codes reference: http://jsfiddle.net/Zword/QzM6m/
     let s = $(this).attr('id');
     $('#'+s).animate({'width':'100px', 'height':'100px'});
     $('#'+s).css({'cursor':'zoom-out'});
@@ -134,7 +134,7 @@ let astronautHeight = 100;
 
 function onkeydown(e) {
     if(e.keyCode === 39) { //right
-        if (px + playerWidth > cvsWidth) {
+        if (px + playerWidth > cvsWidth - 10 ) {
             px = px;
         } else {
             px+=50;
@@ -170,7 +170,7 @@ function onkeydown(e) {
         }
      // player 2
     } else if (e.keyCode === 68) { //right
-        if (px2 + playerWidth > cvsWidth) {
+        if (px2 + playerWidth > cvsWidth - 10) {
             px2 = px2;
         } else {
             px2+=50;
@@ -227,6 +227,8 @@ let collected = [];
 let explosion = [];
 let astronaut = [];
 
+
+
 satellite[0] = {
     x: 0,
     y: Math.floor(Math.random() * (cvsHeight - 40))
@@ -264,9 +266,9 @@ const drawPlayer = (imagePath, px, py) => {
     let player = new Image();
     player.src = imagePath;
     ctx.drawImage(player, px, py, playerWidth, playerHeight);
-    if (py <= cvsHeight - playerHeight) {
-        py += 2;
-    } 
+    // if (py <= cvsHeight - playerHeight) {
+    //     py += 2;
+    // } 
     ctx.closePath();
   }
 
@@ -334,7 +336,7 @@ const singlePlayer = function() {
         ctx.drawImage(satellite2Im, satellite2[i].x, satellite2[i].y, satellite2Width, satellite2Height);
         ctx.closePath();
         satellite2[i].x -= 0.1
-        // console.log(satellite2[i].x)
+        console.log(satellite2[i].x)
         if(satellite2[i].x === 500 ) {
             satellite2.push( {
                 x: 0,
@@ -539,6 +541,10 @@ const singlePlayer = function() {
     ctx.fillText(`💰 Score: ${score}`, 10, cvsHeight - 20);
 
     drawPlayer(imagepath, px, py)
+    // gravity for player
+    if (py <= cvsHeight - playerHeight) {
+        py += 1;
+    } 
 
     if (lives === 0) {
         return endGame() ;           
@@ -546,7 +552,7 @@ const singlePlayer = function() {
 
   requestAnimationFrame(singlePlayer);   
 }
-
+   
 // Double Players
 
 const doublePlayer = function() {
@@ -601,7 +607,7 @@ const doublePlayer = function() {
         ctx.closePath();
         satellite2[i].x -= 0.1
         console.log(satellite2[i].x)
-        if(satellite2[i].x === 500 ) {
+        if(satellite2[i].x === 221.1999999998374 ) {
             satellite2.push( {
                 x: 0,
                 y: Math.floor(Math.random() * (cvsHeight - 40))
@@ -885,6 +891,13 @@ const doublePlayer = function() {
 
     drawPlayer(imagepath, px, py)
     drawPlayer(imagepath2, px2, py2)
+
+    if (py <= cvsHeight - playerHeight) {
+        py += 1;
+    }
+    if (py2 <= cvsHeight - playerHeight) {
+        py2 += 1;
+    }
 
     if (lives === 0 || lives2 === 0) {
         return endGame2();           
