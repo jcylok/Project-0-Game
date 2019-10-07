@@ -411,7 +411,6 @@ const singlePlayer = function() {
     // change obstacle to coin when hit
     if (hit.length != 0) {
     for(let i=0; i<hit.length; i++) {
-
         ctx.beginPath();
         let hitIm = new Image();
         hitIm.src = "/images/coin.png";
