@@ -1,6 +1,66 @@
-// $('#playgame').on('click', function() {
-//     $('body').prepend(`<canvas id="myCanvas" width=980 height=780></canvas>`);
-// });
+$("#container").hide();
+$("#choose1").hide();
+$("#choose2").hide();
+$("#play").hide();
+$(".finishScreen").hide();
+
+
+
+
+$('#one').on('click',function() {
+    $(this).prop("disabled",true);
+    $('#two').prop("disabled",false);
+});
+$('#two').on('click',function() {
+    $(this).prop("disabled",true);
+    $('#one').prop("disabled",false);
+});
+
+$('#one').click( function() {
+    $("#choose1").show();
+    $("#choose2").hide();
+})
+
+$('#two').click( function() {
+    $("#choose2").show();
+    $("#choose1").hide();
+})
+
+$('#restart').on('click',function() {
+    location.reload();
+
+});
+
+
+let previous=0;
+
+$('.shipOption').click(function(){
+    let s = $(this).attr('id');
+    $('#'+s).animate({'width':'100px', 'height':'100px'});
+    $('#'+s).css({'cursor':'zoom-out'});
+    if($('#'+previous).width()!=70)
+    {
+    $('#'+previous).animate({'width':'70px', 'height':'70px'});
+    $('#'+previous).css({'cursor':'zoom-in'});
+    }
+    previous=s;
+});
+
+
+$('.shipOption').click(function(){
+    $('#play').attr('selectedItem', $(this).attr('id'))
+});
+
+
+$('.shipOption').click(function(){
+    $("#play").show();
+});
+
+
+
+
+
+
 var themeAudio = document.getElementById("theme");
 themeAudio.volume = 0.7;
 var shootAudio = document.getElementById("shoot");
@@ -12,42 +72,27 @@ var explosionAudio = document.getElementById("explosion");
 explosionAudio.volume = 0.3;
 
 
-
-
-// $("#StartButton").click(function () {
-//     $("#SplashScreen").hide();
-//     $("#myCanvas").show();
-//     $("#myCanvas").attr("display", "block");
-// });
-
 let cvs = document.getElementById("myCanvas");
 let ctx = cvs.getContext("2d");
 
-
-
-console.log(ctx);
-
-function createImage(image_url, x_position, y_position, width, height) {
-    var image = new Image();
-    image.src = image_url;
-    image.onload = function() {
-        var context;
-        ctx.drawImage( image, x_position, y_position, width, height );
-    }
-      
-    return image;
+function playGame() {
+    $("#menu").hide();
+    $("#container").show();
+    draw()
 }
 
-let bg = "/images/space.jpg"
-let player = "/images/balloon.png"
-let obstacle = "/images/monster.png"
-let coin = "/images/coin.png"
+$("#play").click(function () {
+
+    playGame();
+
+});
+
 
 let cvsWidth = cvs.width;
 let cvsHeight = cvs.height;
 let playerWidth = 80;
 let playerHeight = 80;
-let obsWidth = 80;
+let obsWidth = 70;
 let obsHeight = 80;
 let satelliteWidth = 80;
 let satelliteHeight = 70;
@@ -59,6 +104,8 @@ let coinWidth = 30
 let coinHeight = 30
 let explosionWidth = 60;
 let explosionHeight = 60;
+let astronautWidth = 100;
+let astronautHeight = 100;
 
 
 
@@ -108,7 +155,7 @@ document.addEventListener("keydown", onkeydown);
 
 let px = 300
 let py = 500
-let lives = 5;
+let lives = 2;
 let score = 0;
 let obs = [];
 let bullet = [];
@@ -118,6 +165,7 @@ let satellite2 = [];
 let hit = [];
 let collected = [];
 let explosion = [];
+let astronaut = [];
 
 
 
@@ -128,11 +176,11 @@ back[0] = {
 
 satellite[0] = {
     x: 0,
-    y: Math.floor(Math.random() * cvsHeight) - 10
+    y: Math.floor(Math.random() * cvsHeight) - 30
 }
 satellite2[0] = {
     x: cvsWidth,
-    y: Math.floor(Math.random() * cvsHeight) - 10
+    y: Math.floor(Math.random() * cvsHeight) - 30
 }
 
 obs[0] = {
@@ -154,22 +202,18 @@ bullet[0] = {
     y: 0
 }
 
-
-
-
-
 let x = 100
 let y =200
 
 
   
-const drawPlayer = () => {
+const drawPlayer = (imagePath) => {
     ctx.beginPath();
     let player = new Image();
-    player.src = "/images/rocket.png";
+    player.src = imagePath;
     ctx.drawImage(player, px, py, playerWidth, playerHeight);
     if (py <= cvsHeight - playerHeight) {
-        py+= 2;
+        py += 2;
     } 
     ctx.closePath();
   }
@@ -179,6 +223,22 @@ const drawPlayer = () => {
 
 
 function draw() {
+
+    var selected = document.getElementById("play").getAttribute("selectedItem");
+    let imagepath;
+    console.log(selected)
+    if (selected === "1p1s1") {
+        imagepath = "/images/spaceship.png"
+    } else if (selected === "1p1s2") {
+        imagepath = "/images/spaceship2.png"
+    } else if (selected === "1p1s3") {
+        imagepath = "/images/spaceship3.png"
+    } else if (selected === "1p1s4") {
+        imagepath = "/images/spaceship4.png"
+    }
+
+
+
     themeAudio.play();
 
     
@@ -194,7 +254,7 @@ function draw() {
         if(satellite[i].x === 688.700000000088) {
             satellite.push( {
                 x: 0,
-                y: Math.floor(Math.random() * cvsHeight) - 10
+                y: Math.floor(Math.random() * cvsHeight) - 30
             })
         }
         if(satellite[i].x > cvsWidth) {
@@ -209,11 +269,11 @@ function draw() {
         ctx.drawImage(satellite2Im, satellite2[i].x, satellite2[i].y, satellite2Width, satellite2Height);
         ctx.closePath();
         satellite2[i].x -= 0.1
-        console.log(satellite2[i].x)
+        // console.log(satellite2[i].x)
         if(satellite2[i].x === 485.599999999981 ) {
             satellite2.push( {
                 x: 0,
-                y: Math.floor(Math.random() * cvsHeight) - 10
+                y: Math.floor(Math.random() * cvsHeight) - 60
             })
         }
         if(satellite2[i].x < 0) {
@@ -236,7 +296,7 @@ function draw() {
         if (i % 2 === 0) {
             obs[i].y += 4;
         } else {
-            obs[i].y += 6;
+            obs[i].y += 7;
         }
 
         if( obs.length < 5) {
@@ -379,44 +439,68 @@ function draw() {
 
     }
 
+     
+    if (lives === 1 && astronaut.length === 0) {
+        astronaut.push({
+            x: Math.floor(Math.random() * cvsWidth) - 10,
+            y: cvsHeight
+        })
+    }
+
+    for (let i=0; i<astronaut.length; i++) {
+        ctx.beginPath();         
+        let astronautIm = new Image();
+        astronautIm.src = "/images/astronaut.png";
+        ctx.drawImage(astronautIm, astronaut[i].x, astronaut[i].y, astronautWidth, astronautHeight);
+        ctx.closePath();
+        astronaut[i].y --;
+        
+        if ((px + playerWidth/2 >= astronaut[i].x - 10) && (px + playerWidth/2 <= astronaut[i].x + astronautWidth + 10) && (py + playerHeight/2 >= astronaut[i].y - 10) && (py + playerHeight/2 <= astronaut[i].y + astronautHeight + 10) && astronaut[i].y > 0) {
+            lives ++;   
+            coinAudio.play();
+            let disappearX = astronaut[i].x;
+            let disappearY = astronaut[i].y;
+            collected.push({
+                x: disappearX,
+                y: disappearY
+            })
+            astronaut.splice(i,1)
+
+        } else if (astronaut[i].y < 0) {
+                astronaut.splice(i, 1);
+            }
+    }
+
+
     ctx.fillStyle = "#C0C0C0";
     ctx.font = "30px Arial";
-    ctx.fillText(`Lives: ${lives}`, 10, cvsHeight - 60);
+    ctx.fillText(`❤️ Lives: ${lives}`, 10, cvsHeight - 60);
     
  
     ctx.fillStyle = "#C0C0C0";
     ctx.font = "30px Arial";
-    ctx.fillText(`Score: ${score}`, 10, cvsHeight - 20);
+    ctx.fillText(`💰 Score: ${score}`, 10, cvsHeight - 20);
 
-    drawPlayer()
+    drawPlayer(imagepath)
 
     if (lives === 0) {
-        // alert("game over")
+        return endGame() ;           
     }
 
   requestAnimationFrame(draw)
-        
     
 }
-// setInterval(() => {
-//     requestAnimationFrame(draw)
-    
-// }, 0.00001);
-setTimeout(draw, 100)
 
-// draw()
-// 
 
-// function draw() {
 
-    
+function endGame() {
+    $("#container").hide();
+    $(".startScreen").hide();
+    $("#play").hide();
+    $("#menu").show();
+    $(".finishScreen").show();
+    $(".finishScreen p").text(`Your score was: ${score}`)
+}
 
-    
-    
-//     requestAnimationFrame(draw)
-    
-    
-// }  
-// draw()
-// setTimeout(draw, 100)
+
 
