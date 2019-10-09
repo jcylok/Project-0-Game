@@ -1,5 +1,5 @@
 body {
-    background-image: url("https://git.generalassemb.ly/jacklok/Project-0-Game/blob/master/images/star.gif?raw=true");
+    background-image: url("../images/star.gif");
     background-size: cover;
 }
 
@@ -97,7 +97,7 @@ button {
 }
 
 #myCanvas {
-    background: url('./images/space.jpg') center;
+    background: url('/images/space.jpg') center;
     animation: 5000s scroll infinite linear reverse;
     background-size: cover;
     margin: 0 auto;
