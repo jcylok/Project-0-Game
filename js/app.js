@@ -300,13 +300,13 @@ const singlePlayer = function() {
     let selected = document.getElementById("play").getAttribute("selectedItem");
     let imagepath;
     if (selected === "1p1s1") {
-        imagepath = "../images/spaceship.png"
+        imagepath = "./images/spaceship.png"
     } else if (selected === "1p1s2") {
-        imagepath = "../images/spaceship2.png"
+        imagepath = "./images/spaceship2.png"
     } else if (selected === "1p1s3") {
-        imagepath = "../images/spaceship3.png"
+        imagepath = "./images/spaceship3.png"
     } else if (selected === "1p1s4") {
-        imagepath = "../images/spaceship4.png"
+        imagepath = "./images/spaceship4.png"
     }
     themeAudio.play();   
     ctx.clearRect(0, 0, cvsWidth, cvsHeight);
@@ -314,7 +314,7 @@ const singlePlayer = function() {
     for(let i=0; i<satellite.length; i++) {
         ctx.beginPath();
         let satelliteIm = new Image();
-        satelliteIm.src = "../images/satellite2.png";
+        satelliteIm.src = "./images/satellite2.png";
         ctx.drawImage(satelliteIm, satellite[i].x, satellite[i].y, satelliteWidth, satelliteHeight);
         ctx.closePath();
         satellite[i].x += 0.1
@@ -332,7 +332,7 @@ const singlePlayer = function() {
     for(let i=0; i<satellite2.length; i++) {
         ctx.beginPath();
         let satellite2Im = new Image();
-        satellite2Im.src = "../images/satellite.png";
+        satellite2Im.src = "./images/satellite.png";
         ctx.drawImage(satellite2Im, satellite2[i].x, satellite2[i].y, satellite2Width, satellite2Height);
         ctx.closePath();
         satellite2[i].x -= 0.1
@@ -351,7 +351,7 @@ const singlePlayer = function() {
     for(let i=0; i<obs.length; i++) {
         ctx.beginPath();
         let obsIm = new Image();
-        obsIm.src = "../images/enemy.png";
+        obsIm.src = "./images/enemy.png";
         ctx.drawImage(obsIm, obs[i].x, obs[i].y, obsWidth, obsHeight);
         ctx.closePath();
 
@@ -389,7 +389,7 @@ const singlePlayer = function() {
     for(let i=0; i<explosion.length; i++) {
         ctx.beginPath();
         let explosionIm = new Image();
-        explosionIm.src = "../images/explosion.png";
+        explosionIm.src = "./images/explosion.png";
         ctx.drawImage(explosionIm, explosion[i].x, explosion[i].y, explosionWidth, explosionHeight);
         ctx.closePath();
         explosion[i].y += 0.6
@@ -413,7 +413,7 @@ const singlePlayer = function() {
     for(let i=0; i<hit.length; i++) {
         ctx.beginPath();
         let hitIm = new Image();
-        hitIm.src = "../images/coin.png";
+        hitIm.src = "./images/coin.png";
         ctx.drawImage(hitIm, hit[i].x, hit[i].y, 30, 30);
         ctx.closePath();
         hit[i].y += 12;
@@ -453,7 +453,7 @@ const singlePlayer = function() {
     for(let i=0; i<collected.length; i++) {
         ctx.beginPath();
         let collectedIm = new Image();
-        collectedIm.src = "../images/coin.png";
+        collectedIm.src = "./images/coin.png";
         ctx.drawImage(collectedIm, px, py + 100, 1, 1);
         ctx.closePath();
         collected[i].y -=10
@@ -466,7 +466,7 @@ const singlePlayer = function() {
     for(let i=0; i<bullet.length; i++) {
         ctx.beginPath();         
         let bulletIm = new Image();
-        bulletIm.src = "../images/bullet.png";
+        bulletIm.src = "./images/bullet.png";
         ctx.drawImage(bulletIm, bullet[i].x + playerWidth/2.5, bullet[i].y, bulletWidth, bulletHeight);
         ctx.closePath();
         bullet[i].y -=10
@@ -508,7 +508,7 @@ const singlePlayer = function() {
     for (let i=0; i<astronaut.length; i++) {
         ctx.beginPath();         
         let astronautIm = new Image();
-        astronautIm.src = "../images/astronaut.png";
+        astronautIm.src = "./images/astronaut.png";
         ctx.drawImage(astronautIm, astronaut[i].x, astronaut[i].y, astronautWidth, astronautHeight);
         ctx.closePath();
         astronaut[i].y --;
@@ -559,21 +559,21 @@ const doublePlayer = function() {
     let selected = document.getElementById("play2").getAttribute("selectedItem1");
     let imagepath;
     if (selected === "2p1s1") {
-        imagepath = "../images/spaceship.png"
+        imagepath = "./images/spaceship.png"
     } else if (selected === "2p1s2") {
-        imagepath = "../images/spaceship2.png"
+        imagepath = "./images/spaceship2.png"
     } else if (selected === "2p1s3") {
-        imagepath = "../images/spaceship3.png"
+        imagepath = "./images/spaceship3.png"
     }
 
     let selected2 = document.getElementById("play2").getAttribute("selectedItem2");
     let imagepath2;
     if (selected2 === "2p2s1") {
-        imagepath2 = "../images/spaceship.png"
+        imagepath2 = "./images/spaceship.png"
     } else if (selected2 === "2p2s2") {
-        imagepath2 = "../images/spaceship2.png"
+        imagepath2 = "./images/spaceship2.png"
     } else if (selected2 === "2p2s3") {
-        imagepath2 = "../images/spaceship3.png"
+        imagepath2 = "./images/spaceship3.png"
     }
 
 
@@ -583,7 +583,7 @@ const doublePlayer = function() {
     for(let i=0; i<satellite.length; i++) {
         ctx.beginPath();
         let satelliteIm = new Image();
-        satelliteIm.src = "../images/satellite2.png";
+        satelliteIm.src = "./images/satellite2.png";
         ctx.drawImage(satelliteIm, satellite[i].x, satellite[i].y, satelliteWidth, satelliteHeight);
         ctx.closePath();
         satellite[i].x += 0.1
@@ -601,7 +601,7 @@ const doublePlayer = function() {
     for(let i=0; i<satellite2.length; i++) {
         ctx.beginPath();
         let satellite2Im = new Image();
-        satellite2Im.src = "../images/satellite.png";
+        satellite2Im.src = "./images/satellite.png";
         ctx.drawImage(satellite2Im, satellite2[i].x, satellite2[i].y, satellite2Width, satellite2Height);
         ctx.closePath();
         satellite2[i].x -= 0.1
@@ -620,7 +620,7 @@ const doublePlayer = function() {
     for(let i=0; i<obs.length; i++) {
         ctx.beginPath();
         let obsIm = new Image();
-        obsIm.src = "../images/enemy.png";
+        obsIm.src = "./images/enemy.png";
         ctx.drawImage(obsIm, obs[i].x, obs[i].y, obsWidth, obsHeight);
         ctx.closePath();
 
@@ -669,7 +669,7 @@ const doublePlayer = function() {
     for(let i=0; i<explosion.length; i++) {
         ctx.beginPath();
         let explosionIm = new Image();
-        explosionIm.src = "../images/explosion.png";
+        explosionIm.src = "./images/explosion.png";
         ctx.drawImage(explosionIm, explosion[i].x, explosion[i].y, explosionWidth, explosionHeight);
         ctx.closePath();
         explosion[i].y += 0.6
@@ -692,7 +692,7 @@ const doublePlayer = function() {
 
         ctx.beginPath();
         let hitIm = new Image();
-        hitIm.src = "../images/coin.png";
+        hitIm.src = "./images/coin.png";
         ctx.drawImage(hitIm, hit[i].x, hit[i].y, 30, 30);
         ctx.closePath();
         hit[i].y += 12;
@@ -749,7 +749,7 @@ const doublePlayer = function() {
     for(let i=0; i<collected.length; i++) {
         ctx.beginPath();
         let collectedIm = new Image();
-        collectedIm.src = "../images/coin.png";
+        collectedIm.src = "./images/coin.png";
         ctx.drawImage(collectedIm, px, py + 100, 1, 1);
         ctx.closePath();
         collected[i].y -=10
@@ -762,7 +762,7 @@ const doublePlayer = function() {
     for(let i=0; i<bullet.length; i++) {
         ctx.beginPath();         
         let bulletIm = new Image();
-        bulletIm.src = "../images/bullet.png";
+        bulletIm.src = "./images/bullet.png";
         ctx.drawImage(bulletIm, bullet[i].x + playerWidth/2.5, bullet[i].y, bulletWidth, bulletHeight);
         ctx.closePath();
         bullet[i].y -=10
@@ -775,7 +775,7 @@ const doublePlayer = function() {
     for(let i=0; i<bullet2.length; i++) {
         ctx.beginPath();         
         let bullet2Im = new Image();
-        bullet2Im.src = "../images/bullet.png";
+        bullet2Im.src = "./images/bullet.png";
         ctx.drawImage(bullet2Im, bullet2[i].x + playerWidth/2.5, bullet2[i].y, bulletWidth, bulletHeight);
         ctx.closePath();
         bullet2[i].y -=10
@@ -837,7 +837,7 @@ const doublePlayer = function() {
     for (let i=0; i<astronaut.length; i++) {
         ctx.beginPath();         
         let astronautIm = new Image();
-        astronautIm.src = "../images/astronaut.png";
+        astronautIm.src = "./images/astronaut.png";
         ctx.drawImage(astronautIm, astronaut[i].x, astronaut[i].y, astronautWidth, astronautHeight);
         ctx.closePath();
         astronaut[i].y --;
